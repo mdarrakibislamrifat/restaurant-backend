@@ -24,7 +24,10 @@ export const createProduct = async (req, res, next) => {
       image,
     });
 
-    res.status(201).json(product);
+    res.status(201).json({
+      success: true,
+      data: product
+    });
   } catch (error) {
     next(error);
   }

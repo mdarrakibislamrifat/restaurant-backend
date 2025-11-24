@@ -9,7 +9,10 @@ export const createCategory = async (req, res, next) => {
     }
 
     const category = await Category.create({ name });
-    res.status(201).json(category);
+    res.status(201).json({
+      success: true,
+      data: category
+    });
   } catch (error) {
     next(error);
   }
@@ -18,7 +21,10 @@ export const createCategory = async (req, res, next) => {
 export const getCategories = async (req, res, next) => {
   try {
     const categories = await Category.find();
-    res.status(200).json(categories);
+    res.status(201).json({
+      success: true,
+      data: categories
+    });
   } catch (error) {
     next(error);
   }
