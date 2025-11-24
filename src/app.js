@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
   res.send("API is working. Welcome to the backend.");
 });
 
+
+
+
+
 // API Routes
 app.use("/api/products",ProductRoutes);
 app.use("/api/sliders", sliderRoutes);
