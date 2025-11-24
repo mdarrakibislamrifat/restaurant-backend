@@ -82,3 +82,19 @@ export const getSliderBySlug = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+// delete slider
+export const deleteSlider = async (req, res, next) => {
+  try {
+    const slider = await Slider.findById(req.params.id);
+    if (!slider) {
+      return res.status(404).json({ message: "Slide not found" });
+    }
+    await slider.deleteOne();
+    res.status(200).json({ message: "Slide deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
