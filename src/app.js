@@ -3,6 +3,8 @@ import cors from "cors";
 import ProductRoutes from "./routes/product.routes.js";
 import sliderRoutes from "./routes/slider.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
+import { connect } from "mongoose";
+import { connectDB } from "./config/db.js";
 
 
 const app= express();
@@ -17,6 +19,11 @@ app.get("/", (req, res) => {
   res.send("API is working. Welcome to the backend.");
 });
 
+
+app.use(async(req,res,next)=>{
+    await connectDB();
+    next();
+})
 
 
 
