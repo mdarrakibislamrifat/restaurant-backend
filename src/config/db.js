@@ -1,20 +1,41 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-let isConnected = false;
+dotenv.config();
 
-export const connectDB = async () => {
-  if (isConnected) {
-    return;
+const MONGODB_URI = process.env.MONGO_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("Please add MONGO_URI to your environment variables.");
+}
+
+// Global caching to avoid multiple connections in Vercel serverless
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+export async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  try {
-    const db = await mongoose.connect(process.env.MONGO_URI, {
-      bufferCommands: false,
-    });
-
-    isConnected = db.connections[0].readyState === 1;
-    console.log("DB connected");
-  } catch (error) {
-    console.error("MongoDB Connection Failed:", error.message);
+  if (!cached.promise) {
+    cached.promise = mongoose
+      .connect(MONGODB_URI, {
+        serverApi: { version: "1", strict: true, deprecationErrors: true },
+      })
+      .then((mongoose) => {
+        console.log("MongoDB connected");
+        return mongoose;
+      })
+      .catch((err) => {
+        console.error("MongoDB connection error:", err.message);
+        throw err;
+      });
   }
-};
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
