@@ -1,5 +1,5 @@
 import express from "express";
-import { getSliders, createSlider } from "../controllers/slider.controller.js";
+import { getSliders, createSlider } from "../controllers/sliderController.js";
 
 const router = express.Router();
 
