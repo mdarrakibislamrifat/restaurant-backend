@@ -27,11 +27,17 @@ export const getProducts = async (req, res, next) => {
   try {
     const { category } = req.query;
 
-    let query = category ? { category } : {};
+    const query = category
+  ? { category: { $regex: new RegExp(`^${category}$`, "i") } }
+  : {};
+
 
     const products = await Product.find(query);
+
     res.status(200).json(products);
   } catch (error) {
     next(error);
   }
 };
+
+
