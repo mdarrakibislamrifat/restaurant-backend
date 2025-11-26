@@ -4,6 +4,7 @@ import ProductRoutes from "./routes/product.routes.js";
 import sliderRoutes from "./routes/slider.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import { connectDB } from "./config/db.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 
 const app= express();
@@ -37,6 +38,17 @@ app.use("/api/sliders/:id", sliderRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/categories/:id", categoryRoutes);
 
+
+
+
+app.use((req, res, next) => {
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error); 
+});
+
+// Error handling middleware
+app.use(errorHandler);
 
 
 
